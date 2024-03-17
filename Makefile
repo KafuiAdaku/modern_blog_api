@@ -69,3 +69,7 @@ isort-diff:
 # Command to apply import sorting to Python files using isort
 isort:
 	docker compose -f development.yml exec api isort . --skip env --skip migration
+
+# Command to check environment variables of Django app
+check-env:
+	docker compose -f development.yml run --rm api python check_env.py

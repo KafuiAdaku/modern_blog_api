@@ -35,9 +35,7 @@ class Profile(TimeStampedUUIDModel):
         blank=False,
         null=False,
     )
-    profile_photo = models.ImageField(
-        verbose_name=_("profile photo"), default="/profile_default.png"
-    )
+    profile_photo = models.ImageField(verbose_name=_("profile photo"), blank=True)
     twitter_handle = models.CharField(
         verbose_name=_("twitter_handle"), max_length=20, blank=True
     )
@@ -55,20 +53,20 @@ class Profile(TimeStampedUUIDModel):
         return f"{self.user.username}'s profile"
 
     # Implementing following and unfollowing feature
-    def following_list(self) -> List['Profile']:
+    def following_list(self) -> List["Profile"]:
         return list(self.follows.all())
 
-    def followers_list(self) -> List['Profile']:
+    def followers_list(self) -> List["Profile"]:
         return list(self.followed_by.all())
 
-    def follow(self, profile: 'Profile') -> None:
+    def follow(self, profile: "Profile") -> None:
         self.follows.add(profile)
 
-    def unfollow(self, profile: 'Profile') -> None:
+    def unfollow(self, profile: "Profile") -> None:
         self.follows.remove(profile)
 
-    def check_following(self, profile: 'Profile') -> bool:
+    def check_following(self, profile: "Profile") -> bool:
         return self.follows.filter(pkid=profile.pkid).exists()
 
-    def check_is_followed_by(self, profile: 'Profile') -> bool:
+    def check_is_followed_by(self, profile: "Profile") -> bool:
         return self.followed_by.filter(pkid=profile.pkid).exists()
