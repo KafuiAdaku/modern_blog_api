@@ -11,8 +11,7 @@ services:
       - .:/app
       - static_volume:/app/staticfiles
       - media_volume:/app/mediafiles
-    ports:
-      - "8000:8000"
+
     expose:
       - "8000"
     env_file:
@@ -21,6 +20,7 @@ services:
     depends_on:
       - postgres
       - mailhog
+      - redis
     networks:
       - modern-blog-api
 
@@ -42,6 +42,64 @@ services:
     container_name: mailhog
     ports:
       - "8025:8025"
+    networks:
+      - modern-blog-api
+
+  redis:
+    image: redis:6-alpine
+    container_name: redis
+    networks:
+      - modern-blog-api
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: ./docker/development/django/Dockerfile
+    command: /start-celeryworker
+    container_name: celery_worker
+    volumes:
+      - .:/app
+    env_file:
+      - ./.envs/.development/.django
+      - ./.envs/.development/.postgres
+    depends_on:
+      - redis
+      - postgres
+      - mailhog
+    networks:
+      - modern-blog-api
+
+  flower:
+    build:
+      context: .
+      dockerfile: ./docker/development/django/Dockerfile
+    command: /start-flower
+    container_name: flower
+    volumes:
+      - .:/app
+    env_file:
+      - ./.envs/.development/.django
+      - ./.envs/.development/.postgres
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - modern-blog-api
+
+  nginx:
+    restart: always
+    depends_on:
+      - api
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+    build:
+      context: ./docker/development/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
     networks:
       - modern-blog-api
 
