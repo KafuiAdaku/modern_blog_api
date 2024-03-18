@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -30,6 +30,9 @@ urlpatterns = [
     ),
     # setting admin to custom admin url path
     path(settings.ADMIN_URL, admin.site.urls),
+    # user registration using djoser urls
+    path("api/v1/auth/", include("djoser.urls")),
+    path("api/v1/auth/", include("djoser.urls.jwt")),
 ]
 
 admin.site.site_header = "Modern Blog API"
