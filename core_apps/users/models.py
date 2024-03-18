@@ -39,7 +39,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def get_full_name(self) -> str:
         return f"{self.first_name.title()} {self.last_name.title()}"
-
-    # get rid of this method later
-    def get_short_name(self) -> str:
-        return self.first_name
