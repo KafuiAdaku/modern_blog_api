@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import ValidationError
 
 from modern_blog_api.settings.development import DEFAULT_FROM_EMAIL
 
@@ -69,9 +70,18 @@ class UpdateProfileAPIView(APIView):
             raise NotYourProfile
 
         data = request.data
+        # # Print the data before saving
+        # print("Data before saving:", data)
+
         serializer = UpdateProfileSerializer(
             instance=request.user.profile, data=data, partial=True
         )
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            print("Validation error:", e.detail)
+
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

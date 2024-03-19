@@ -37,13 +37,13 @@ class Profile(TimeStampedUUIDModel):
     )
     profile_photo = models.ImageField(verbose_name=_("profile photo"), blank=True)
     twitter_handle = models.CharField(
-        verbose_name=_("twitter_handle"), max_length=20, blank=True
+        verbose_name=_("twitter_handle"), max_length=50, blank=True
     )
     facebook_account = models.CharField(
-        verbose_name=_("facebook_account"), max_length=20, blank=True
+        verbose_name=_("facebook_account"), max_length=50, blank=True
     )
     github_account = models.CharField(
-        verbose_name=_("twitter_account"), max_length=20, blank=True
+        verbose_name=_("twitter_account"), max_length=50, blank=True
     )
     follows = models.ManyToManyField(
         "self", symmetrical=False, related_name="followed_by", blank=True
