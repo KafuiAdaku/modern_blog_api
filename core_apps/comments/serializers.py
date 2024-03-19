@@ -12,11 +12,13 @@ class CommentSerializer(serializers.ModelSerializer):
     updated_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj) -> str:
+        """Get created at date."""
         now = obj.created_at
         formatted_date = now.strftime("%m/%d/%Y, %H:%M:%S")
         return formatted_date
 
     def get_updated_at(self, obj: Comment) -> str:
+        """Get updated at date."""
         then = obj.updated_at
         formatted_date = then.strftime("%m/%d/%Y, %H:%M:%S")
         return formatted_date
@@ -36,11 +38,13 @@ class CommentListSerializer(serializers.ModelSerializer):
     updated_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj: Comment) -> str:
+        """Get created at date."""
         now = obj.created_at
         formatted_date = now.strftime("%m/%d/%Y, %H:%M:%S")
         return formatted_date
 
     def get_updated_at(self, obj: Comment) -> str:
+        """Get updated at date."""
         then = obj.updated_at
         formatted_date = then.strftime("%m/%d/%Y, %H:%M:%S")
         return formatted_date

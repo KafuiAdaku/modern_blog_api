@@ -12,7 +12,8 @@ class CommentAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CommentSerializer
 
-    def post(self, request, **kwargs):
+    def post(self, request: Request, **kwargs: dict) -> Response:
+        """Create a new comment."""
         try:
             slug = self.kwargs.get("slug")
             blog = Blog.objects.get(slug=slug)
@@ -28,7 +29,8 @@ class CommentAPIView(generics.GenericAPIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def get(self, request, **kwargs):
+    def get(self, request: Request, **kwargs: dict) -> Response:
+        """Get all comments for a blog."""
         try:
             slug = self.kwargs.get("slug")
             blog = Blog.objects.get(slug=slug)
@@ -50,10 +52,12 @@ class CommentAPIView(generics.GenericAPIView):
 
 
 class CommentUpdateDeleteAPIView(generics.GenericAPIView):
+    """Update and delete a comment class"""
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CommentSerializer
 
-    def put(self, request, slug, id):
+    def put(self, request: Request, slug: str, id: int) -> Response:
+        """Update a comment."""
         try:
             comment_to_update = Comment.objects.get(id=id)
         except Comment.DoesNotExist:
@@ -69,7 +73,8 @@ class CommentUpdateDeleteAPIView(generics.GenericAPIView):
         }
         return Response(response, status=status.HTTP_200_OK)
 
-    def delete(self, request, slug, id):
+    def delete(self, request: Request, slug: str, id: int) -> Response:
+        """Delete a comment."""
         try:
             comment_to_delete = Comment.objects.get(id=id)
         except Comment.DoesNotExist:
