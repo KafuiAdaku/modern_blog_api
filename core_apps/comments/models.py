@@ -8,6 +8,7 @@ User = get_user_model()
 
 class Comment(TimeStampedUUIDModel):
     """Comment model"""
+
     blog = models.ForeignKey(
         "blogs.Blog", on_delete=models.CASCADE, related_name="comments"
     )

@@ -10,6 +10,7 @@ User = get_user_model()
 
 class ReactionManager(models.Manager):
     """Custom manager for Reaction model."""
+
     def likes(self) -> int:
         """Return the number of likes."""
         return self.get_queryset().filter(reaction__gt=0).count()
@@ -27,8 +28,10 @@ class ReactionManager(models.Manager):
 
 class Reaction(TimeStampedUUIDModel):
     """Model for user reactions on articles."""
+
     class Reactions(models.IntegerChoices):
         """Choices for user reactions."""
+
         LIKE = 1, _("like")
         DISLIKE = -1, _("dislike")
 
@@ -44,11 +47,10 @@ class Reaction(TimeStampedUUIDModel):
 
     class Meta:
         """Meta options."""
+
         unique_together = ["user", "blog", "reaction"]
 
     def __str__(self):
         """Return string representation."""
-        return (
-            f"{self.user.username} voted on \
-            {self.article.title} with a {self.reaction}"
-        )
+        return f"{self.user.username} voted on \
+            {self.blog.title} with a {self.reaction}"

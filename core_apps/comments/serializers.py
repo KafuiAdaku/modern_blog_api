@@ -8,6 +8,7 @@ User = get_user_model()
 
 class CommentSerializer(serializers.ModelSerializer):
     """Comment serializer."""
+
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
 
@@ -25,13 +26,14 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         """Meta class."""
+
         model = Comment
-        fields = ["id", "author",
-                  "article", "body", "created_at", "updated_at"]
+        fields = ["id", "author", "blog", "body", "created_at", "updated_at"]
 
 
 class CommentListSerializer(serializers.ModelSerializer):
     """Comment list serializer."""
+
     author = serializers.ReadOnlyField(source="author.user.username")
     article = serializers.ReadOnlyField(source="blog.title")
     created_at = serializers.SerializerMethodField()
@@ -51,5 +53,6 @@ class CommentListSerializer(serializers.ModelSerializer):
 
     class Meta:
         """Meta class."""
+
         model = Comment
         fields = ["id", "author", "blog", "body", "created_at", "updated_at"]

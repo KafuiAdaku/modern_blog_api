@@ -5,6 +5,7 @@ from .models import Reaction
 
 class ReactionSerializer(serializers.ModelSerializer):
     """Serializer for Reaction model."""
+
     created_at = serializers.SerializerMethodField()
 
     def get_created_at(self, obj: Reaction) -> str:
@@ -14,5 +15,6 @@ class ReactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         """Meta options."""
+
         model = Reaction
         exclude = ["pkid", "updated_at"]
