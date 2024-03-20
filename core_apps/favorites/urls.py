@@ -8,6 +8,5 @@ urlpatterns = [
         views.ListUserFavoriteBlogsAPIView.as_view(),
         name="my-favorites",
     ),
-    path("<slug:slug>/", views.FavoriteAPIView.as_view(),
-         name="favorite-blogs"),
+    path("<slug:slug>/", views.FavoriteAPIView.as_view(), name="favorite-blogs"),
 ]

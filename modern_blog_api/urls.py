@@ -35,6 +35,18 @@ urlpatterns = [
     path("api/v1/auth/", include("djoser.urls.jwt")),
     # route for profile
     path("api/v1/profiles/", include("core_apps.profiles.urls")),
+    # route for blogs
+    path("api/v1/blogs", include("core_apps.blogs.urls")),
+    # route for ratings
+    path("api/v1/ratings/", include("core_apps.ratings.urls")),
+    # route for blog reactions
+    path("api/v1/vote/", include("core_apps.reactions.urls")),
+    # route for favorting blogs
+    path("api/v1/favorite/", include("core_apps.favorites.urls")),
+    # route for blog comments
+    path("api/v1/comments/", include("core_apps.comments.urls")),
+    # route for searching with haystack
+    path("api/v1/haystack/", include("core_apps.search.urls")),
 ]
 
 admin.site.site_header = "Modern Blog API"
