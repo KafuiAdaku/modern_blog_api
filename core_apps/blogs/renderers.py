@@ -6,10 +6,15 @@ from rest_framework.renderers import JSONRenderer
 
 class BlogJSONRenderer(JSONRenderer):
     """JSON Renderer for blog app"""
+
     charset = "utf-8"
 
-    def render(self, data: Any, accepted_media_type: Optional[str] = None,
-               renderer_context: Optional[Dict[str, Any]] = None) -> Any:
+    def render(
+        self,
+        data: Any,
+        accepted_media_type: Optional[str] = None,
+        renderer_context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
         """Render the blog data"""
         status_code = renderer_context["response"].status_code
         errors = data.get("errors", None)
@@ -22,8 +27,12 @@ class BlogJSONRenderer(JSONRenderer):
 class BlogsJSONRenderer(JSONRenderer):
     charset = "utf-8"
 
-    def render(self, data: Any, accepted_media_type: Optional[str] = None,
-               renderer_context: Optional[Dict[str, Any]] = None) -> Any:
+    def render(
+        self,
+        data: Any,
+        accepted_media_type: Optional[str] = None,
+        renderer_context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
         status_code = renderer_context["response"].status_code
         errors = data.get("errors", None)
 
