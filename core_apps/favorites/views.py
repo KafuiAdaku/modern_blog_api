@@ -1,8 +1,9 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from typing import Any, Request
 
-from core_apps.articles.models import Blog 
+from core_apps.blogs.models import Blog 
 from core_apps.blogs.serializers import BlogCreateSerializer
 
 from .exceptions import AlreadyFavorited
@@ -44,12 +45,12 @@ class ListUserFavoriteBlogsAPIView(APIView):
         """List user favorite blogs."""
         Favorites = Favorite.objects.filter(user_id=request.user.pkid)
 
-        favorite_articles = []
+        favorite_blogs = []
         for favorite in Favorites:
-            article = Article.objects.get(pkid=favorite.article.pkid)
-            article = ArticleCreateSerializer(
-                article, context={"article": article.slug, "request": request}
+            blog = Blog.objects.get(pkid=favorite.blog.pkid)
+            blog = BlogCreateSerializer(
+                blog, context={"blog": blog.slug, "request": request}
             ).data
-            favorite_articles.append(article)
-        favorites = {"my_favorites": favorite_articles}
+            favorite_blogs.append(blog)
+        favorites = {"my_favorites": favorite_blogs}
         return Response(data=favorites, status=status.HTTP_200_OK)

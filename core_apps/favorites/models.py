@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from typing import Any
 
 from core_apps.articles.models import Blog
 from core_apps.common.models import TimeStampedUUIDModel
@@ -19,7 +20,7 @@ class Favorite(TimeStampedUUIDModel):
         """Return string representation of the model"""
         return f"{self.user.username} favorited {self.blog.title}"
 
-    def is_favorited(self, user, blog) -> bool:
+    def is_favorited(self, user, blog: str) -> bool:
         """Check if blog is favorited by user"""
         try:
             blog = self.blog
