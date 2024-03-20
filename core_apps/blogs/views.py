@@ -1,4 +1,6 @@
 import logging
+from typing import List, Dict
+from django.http import Request
 
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
@@ -8,7 +10,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core_apps.articles.models import Blog, BlogViews
+from core_apps.blogs.models import Blog, BlogViews
 
 from .exceptions import UpdateBlog
 from .filters import BlogFilter
@@ -28,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 class BlogListAPIView(generics.ListAPIView):
     """List all blogs"""
+
     serializer_class = BlogSerializer
     permission_classes = [
         permissions.IsAuthenticated,
@@ -42,24 +45,23 @@ class BlogListAPIView(generics.ListAPIView):
 
 class BlogCreateAPIView(generics.CreateAPIView):
     """Create a blog"""
+
     permission_classes = [
         permissions.IsAuthenticated,
     ]
     serializer_class = BlogCreateSerializer
     renderer_classes = [BlogJSONRenderer]
 
-    def create(self, request: Request, *args: list,
-               **kwargs: dict) -> Response:
+    def create(self, request: Request, *args: List, **kwargs: Dict) -> Response:
         """Create a blog"""
         user = request.user
         data = request.data
         data["author"] = user.pkid
-        serializer = self.serializer_class(data=data,
-                                           context={"request": request})
+        serializer = self.serializer_class(data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
         logger.info(
-            f"article {serializer.data.get('title')} \
+            f"blog {serializer.data.get('title')} \
             created by {user.username}"
         )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -67,20 +69,23 @@ class BlogCreateAPIView(generics.CreateAPIView):
 
 class BlogDetailView(APIView):
     """Get a blog"""
+
     renderer_classes = [BlogJSONRenderer]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request: Request, slug: str) -> Response:
         """Get a blog by slug"""
-        article = Blog.objects.get(slug=slug)
+        blog = Blog.objects.get(slug=slug)
+
+        # Getting IP address of user to increase blogs view count
         x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
         if x_forwarded_for:
             ip = x_forwarded_for.split(",")[0]
         else:
             ip = request.META.get("REMOTE_ADDR")
 
-        if not BlogViews.objects.filter(article=blog, ip=ip).exists():
-            BlogViews.objects.create(article=blog, ip=ip)
+        if not BlogViews.objects.filter(blog=blog, ip=ip).exists():
+            BlogViews.objects.create(blog=blog, ip=ip)
 
             blog.views += 1
             blog.save()
@@ -92,10 +97,10 @@ class BlogDetailView(APIView):
 
 @api_view(["PATCH"])
 @permission_classes([permissions.IsAuthenticated])
-def update_article_api_view(request: Request, slug: str) -> Response:
+def update_blog_api_view(request: Request, slug: str) -> Response:
     """Update a blog"""
     try:
-        article = blog.objects.get(slug=slug)
+        blog = Blog.objects.get(slug=slug)
     except Blog.DoesNotExist:
         raise NotFound("That blog does not exist in our catalog")
 
@@ -113,15 +118,15 @@ def update_article_api_view(request: Request, slug: str) -> Response:
 
 class BlogDeleteAPIView(generics.DestroyAPIView):
     """Delete a blog"""
+
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Blog.objects.all()
     lookup_field = "slug"
 
-    def delete(self, request: Request, *args: list,
-               **kwargs: dict) -> Response:
+    def delete(self, request: Request, *args: List, **kwargs: Dict) -> Response:
         """Delete a blog"""
         try:
-            blog = Blog.objects.get(slug=self.kwargs.get("slug"))
+            blog = Blog.objects.get(slug=self.kwargs.get("slug"))  # noqa: F841
         except Blog.DoesNotExist:
             raise NotFound("That blog does not exist in our catalog")
 

@@ -43,7 +43,7 @@ class Profile(TimeStampedUUIDModel):
         verbose_name=_("facebook_account"), max_length=50, blank=True
     )
     github_account = models.CharField(
-        verbose_name=_("twitter_account"), max_length=50, blank=True
+        verbose_name=_("github_account"), max_length=50, blank=True
     )
     follows = models.ManyToManyField(
         "self", symmetrical=False, related_name="followed_by", blank=True
