@@ -35,6 +35,8 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "corsheaders",
     "djcelery_email",
+    "haystack",
+    "drf_haystack",
     "djoser",
     "rest_framework_simplejwt",
 ]
@@ -44,6 +46,12 @@ LOCAL_APPS = [
     "core_apps.common",
     "core_apps.profiles",
     "core_apps.users",
+    "core_apps.blogs",
+    "core_apps.favorites",
+    "core_apps.reactions",
+    "core_apps.ratings",
+    "core_apps.comments",
+    "core_apps.search",
 ]
 
 # combining all 3 apps into required installed app for django
@@ -219,6 +227,16 @@ DJOSER = {
         "user_delete": "djoser.serializers.UserDeleteSerializer",
     },
 }
+
+HAYSTACK_CONNECTIONS = {
+    "default": {
+        "ENGINE": "haystack.backends.whoosh_backend.WhooshEngine",
+        "PATH": ROOT_DIR / "whoosh_index",
+    }
+}
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
+
+HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
 
 
 LOGGING = {

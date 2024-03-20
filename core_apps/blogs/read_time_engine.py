@@ -1,7 +1,7 @@
 from typing import Any, List
 
 
-class BlogTimeEngine:
+class BlogReadTimeEngine:
     def __init__(self, blog: Any) -> None:
         """Initializes the blog time engine"""
         self.blog = blog
@@ -25,8 +25,7 @@ class BlogTimeEngine:
     def get_tags(self) -> List[str]:
         """Get the tags of the blog"""
         tag_words = []
-        [tag_words.extend(tag_word.split()) for
-            tag_word in self.blog.list_of_tags]
+        [tag_words.extend(tag_word.split()) for tag_word in self.blog.list_of_tags]
         return tag_words
 
     def get_body(self) -> str:
@@ -56,14 +55,12 @@ class BlogTimeEngine:
             time_to_read = word_length / self.words_per_minute
             if time_to_read < 1:
                 read_time = (
-                    str(round((time_to_read +
-                        self.banner_image_adjustment_time) * 60))
+                    str(round((time_to_read + self.banner_image_adjustment_time) * 60))
                     + " second(s)"
                 )
             else:
                 read_time = (
-                    str(round(time_to_read +
-                        self.banner_image_adjustment_time))
+                    str(round(time_to_read + self.banner_image_adjustment_time))
                     + " minute(s)"
                 )
             return read_time

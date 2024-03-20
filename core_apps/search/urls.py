@@ -1,12 +1,11 @@
 from django.urls import path
 from rest_framework import routers
 
-from .views import SearchArticleView
+from .views import SearchBlogView
 
 router = routers.DefaultRouter()
-router.register("search", SearchArticleView, basename="search-article")
+router.register("search", SearchBlogView, basename="search-article")
 
 urlpatterns = [
-    path("search/",
-         SearchArticleView.as_view({"get": "list"}), name="search-article")
+    path("search/", SearchBlogView.as_view({"get": "list"}), name="search-article")
 ]

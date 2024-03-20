@@ -1,9 +1,9 @@
+from django.http import HttpRequest
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from typing import Any, Request
 
-from core_apps.blogs.models import Blog 
+from core_apps.blogs.models import Blog
 from core_apps.blogs.serializers import BlogCreateSerializer
 
 from .exceptions import AlreadyFavorited
@@ -13,10 +13,11 @@ from .serializers import FavoriteSerializer
 
 class FavoriteAPIView(generics.CreateAPIView):
     """View for favoriting a blog."""
+
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = FavoriteSerializer
 
-    def post(self, request: Request, slug: str) -> Response:
+    def post(self, request: HttpRequest, slug: str) -> Response:
         """Create a favorite."""
         data = request.data
         blog = Blog.objects.get(slug=slug)
@@ -39,9 +40,10 @@ class FavoriteAPIView(generics.CreateAPIView):
 
 class ListUserFavoriteBlogsAPIView(APIView):
     """View for listing user favorite blogs."""
+
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request: Request) -> Response:
+    def get(self, request: HttpRequest) -> Response:
         """List user favorite blogs."""
         Favorites = Favorite.objects.filter(user_id=request.user.pkid)
 

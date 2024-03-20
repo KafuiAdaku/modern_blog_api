@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from typing import Any
 
-from core_apps.articles.models import Blog
+from core_apps.blogs.models import Blog
 from core_apps.common.models import TimeStampedUUIDModel
 
 User = get_user_model()
@@ -10,8 +9,8 @@ User = get_user_model()
 
 class Favorite(TimeStampedUUIDModel):
     """Favorite model"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name="favorites")
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
     article = models.ForeignKey(
         Blog, on_delete=models.CASCADE, related_name="blog_favorites"
     )

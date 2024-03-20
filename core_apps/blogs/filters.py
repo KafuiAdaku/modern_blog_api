@@ -1,10 +1,11 @@
 import django_filters as filters
 from django.db.models import QuerySet
-from core_apps.articles.models import Article
+from core_apps.blogs.models import Blog
 
 
-class Filter(filters.FilterSet):
+class BlogFilter(filters.FilterSet):
     """Blog Filter"""
+
     author = filters.CharFilter(
         field_name="author__first_name", lookup_expr="icontains"
     )
@@ -17,10 +18,10 @@ class Filter(filters.FilterSet):
 
     class Meta:
         """Meta"""
+
         model = Blog
         fields = ["author", "title", "tags", "created_at", "updated_at"]
 
-    def get_blog_tags(self, queryset: QuerySet, tags: str, value: str) \
-            -> QuerySet:
+    def get_blog_tags(self, queryset: QuerySet, tags: str, value: str) -> QuerySet:
         tag_values = value.replace(" ", "").split(",")
         return queryset.filter(tags__tag__in=tag_values).distinct()

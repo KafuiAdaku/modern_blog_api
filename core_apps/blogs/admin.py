@@ -5,7 +5,8 @@ from . import models
 
 class BlogAdmin(admin.ModelAdmin):
     """Blog Admin"""
-    list_display: List[str] = ["pkid", "author", "slug", "article_read_time", "views"]
+
+    list_display: List[str] = ["pkid", "author", "slug", "blog_read_time", "views"]
     list_display_links: List[str] = ["pkid", "author"]
 
 
