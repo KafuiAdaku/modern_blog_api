@@ -1,4 +1,4 @@
-from django.http import Request
+from django.http import HttpRequest
 from rest_framework import permissions, status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
@@ -43,7 +43,7 @@ class ReactionAPIView(APIView):
         status_code = status.HTTP_201_CREATED
         return response, status_code
 
-    def post(self, request: Request, *args: List, **kwargs: Dict) -> Response:
+    def post(self, request: HttpRequest, *args: List, **kwargs: Dict) -> Response:
         """Set user reaction on an blog."""
         slug = self.kwargs.get("slug")
         blog = find_blog_helper(slug)

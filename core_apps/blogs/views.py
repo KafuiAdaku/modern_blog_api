@@ -1,6 +1,6 @@
 import logging
 from typing import List, Dict
-from django.http import Request
+from django.http import HttpRequest
 
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
@@ -52,7 +52,7 @@ class BlogCreateAPIView(generics.CreateAPIView):
     serializer_class = BlogCreateSerializer
     renderer_classes = [BlogJSONRenderer]
 
-    def create(self, request: Request, *args: List, **kwargs: Dict) -> Response:
+    def create(self, request: HttpRequest, *args: List, **kwargs: Dict) -> Response:
         """Create a blog"""
         user = request.user
         data = request.data
@@ -73,7 +73,7 @@ class BlogDetailView(APIView):
     renderer_classes = [BlogJSONRenderer]
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request: Request, slug: str) -> Response:
+    def get(self, request: HttpRequest, slug: str) -> Response:
         """Get a blog by slug"""
         blog = Blog.objects.get(slug=slug)
 
@@ -97,7 +97,7 @@ class BlogDetailView(APIView):
 
 @api_view(["PATCH"])
 @permission_classes([permissions.IsAuthenticated])
-def update_blog_api_view(request: Request, slug: str) -> Response:
+def update_blog_api_view(request: HttpRequest, slug: str) -> Response:
     """Update a blog"""
     try:
         blog = Blog.objects.get(slug=slug)
@@ -123,7 +123,7 @@ class BlogDeleteAPIView(generics.DestroyAPIView):
     queryset = Blog.objects.all()
     lookup_field = "slug"
 
-    def delete(self, request: Request, *args: List, **kwargs: Dict) -> Response:
+    def delete(self, request: HttpRequest, *args: List, **kwargs: Dict) -> Response:
         """Delete a blog"""
         try:
             blog = Blog.objects.get(slug=self.kwargs.get("slug"))  # noqa: F841

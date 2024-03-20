@@ -1,5 +1,5 @@
-from django.http import Request
-from typing import List, Dict
+from django.http import HttpRequest
+from typing import Dict
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
@@ -14,7 +14,7 @@ class CommentAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CommentSerializer
 
-    def post(self, request: Request, **kwargs: Dict) -> Response:
+    def post(self, request: HttpRequest, **kwargs: Dict) -> Response:
         """Create a new comment."""
         try:
             slug = self.kwargs.get("slug")
@@ -31,7 +31,7 @@ class CommentAPIView(generics.GenericAPIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def get(self, request: Request, **kwargs: Dict) -> Response:
+    def get(self, request: HttpRequest, **kwargs: Dict) -> Response:
         """Get all comments for a blog."""
         try:
             slug = self.kwargs.get("slug")
@@ -59,7 +59,7 @@ class CommentUpdateDeleteAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CommentSerializer
 
-    def put(self, request: Request, slug: str, id: int) -> Response:
+    def put(self, request: HttpRequest, slug: str, id: int) -> Response:
         """Update a comment."""
         try:
             comment_to_update = Comment.objects.get(id=id)
@@ -76,7 +76,7 @@ class CommentUpdateDeleteAPIView(generics.GenericAPIView):
         }
         return Response(response, status=status.HTTP_200_OK)
 
-    def delete(self, request: Request, slug: str, id: int) -> Response:
+    def delete(self, request: HttpRequest, slug: str, id: int) -> Response:
         """Delete a comment."""
         try:
             comment_to_delete = Comment.objects.get(id=id)
