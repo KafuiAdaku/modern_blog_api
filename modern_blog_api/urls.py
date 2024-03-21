@@ -36,7 +36,7 @@ urlpatterns = [
     # route for profile
     path("api/v1/profiles/", include("core_apps.profiles.urls")),
     # route for blogs
-    path("api/v1/blogs", include("core_apps.blogs.urls")),
+    path("api/v1/blogs/", include("core_apps.blogs.urls")),
     # route for ratings
     path("api/v1/ratings/", include("core_apps.ratings.urls")),
     # route for blog reactions

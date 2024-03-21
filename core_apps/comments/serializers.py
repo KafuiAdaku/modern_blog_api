@@ -35,7 +35,7 @@ class CommentListSerializer(serializers.ModelSerializer):
     """Comment list serializer."""
 
     author = serializers.ReadOnlyField(source="author.user.username")
-    article = serializers.ReadOnlyField(source="blog.title")
+    blog = serializers.ReadOnlyField(source="blog.title")
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
 

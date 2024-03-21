@@ -73,3 +73,7 @@ isort:
 # Command to check environment variables of Django app
 check-env:
 	docker compose -f development.yml run --rm api python check_env.py
+
+# command to rebuild search index
+search_index:
+	docker compose -f development.yml run --rm api python manage.py rebuild_index
