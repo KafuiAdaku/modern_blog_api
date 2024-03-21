@@ -40,7 +40,7 @@ class CommentAPIView(generics.GenericAPIView):
             raise NotFound("That blog does not exist in our catalog")
 
         try:
-            comments = Comment.objects.filter(article_id=blog.pkid)
+            comments = Comment.objects.filter(blog_id=blog.pkid)
         except Comment.DoesNotExist:
             raise NotFound("No comments found")
 

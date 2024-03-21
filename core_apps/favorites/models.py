@@ -11,7 +11,7 @@ class Favorite(TimeStampedUUIDModel):
     """Favorite model"""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
-    article = models.ForeignKey(
+    blog = models.ForeignKey(
         Blog, on_delete=models.CASCADE, related_name="blog_favorites"
     )
 
