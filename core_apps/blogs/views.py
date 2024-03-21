@@ -33,7 +33,7 @@ class BlogListAPIView(generics.ListAPIView):
 
     serializer_class = BlogSerializer
     permission_classes = [
-        permissions.IsAuthenticated,
+        permissions.AllowAny,
     ]
     queryset = Blog.objects.all()
     renderer_classes = (BlogsJSONRenderer,)
@@ -71,7 +71,7 @@ class BlogDetailView(APIView):
     """Get a blog"""
 
     renderer_classes = [BlogJSONRenderer]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request: HttpRequest, slug: str) -> Response:
         """Get a blog by slug"""
