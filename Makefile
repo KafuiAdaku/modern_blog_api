@@ -77,3 +77,7 @@ check-env:
 # command to rebuild search index
 search_index:
 	docker compose -f development.yml run --rm api python manage.py rebuild_index
+
+# Command to check Django project for common problems and inconsistencies
+check:
+	docker compose -f development.yml run --rm api python3 manage.py check

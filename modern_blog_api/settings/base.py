@@ -39,6 +39,7 @@ THIRD_PARTY_APPS = [
     "drf_haystack",
     "djoser",
     "rest_framework_simplejwt",
+    "axes",
 ]
 
 # created apps for blog api
@@ -67,6 +68,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # django-axes middleware
+    "axes.middleware.AxesMiddleware",
 ]
 
 ROOT_URLCONF = "modern_blog_api.urls"
@@ -178,6 +181,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_URLS_REGEX = r"^/api/.*$"
 
 AUTH_USER_MODEL = "users.User"
+
+AUTHENTICATION_BACKENDS = [
+    # AxesStandaloneBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    "axes.backends.AxesStandaloneBackend",
+    # Django ModelBackend is the default authentication backend.
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+# Number of login attempts allowed before a block
+AXES_FAILURE_LIMIT = 5
+AXES_LOCK_OUT_AT_FAILURE = True
+AXES_COOLOFF_TIME = 5
+# lockout user based of browser, ip and username
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = False
 
 # CELERY settings
 CELERY_BROKER_URL = env("CELERY_BROKER")
