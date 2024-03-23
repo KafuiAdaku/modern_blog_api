@@ -8,3 +8,5 @@ isort==5.9.3
 argh==0.26.2
 PyYAML==6.0
 watchdog==2.1.6
+
+django-redis==5.4.0

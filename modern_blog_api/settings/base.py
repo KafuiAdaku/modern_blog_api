@@ -127,6 +127,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Redis Cache
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/0",  # Replace with your Redis server and port
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
+
+REDIS_HOST = "redis"
+REDIS_PORT = 6379
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -193,8 +206,8 @@ AUTHENTICATION_BACKENDS = [
 AXES_FAILURE_LIMIT = 5
 AXES_LOCK_OUT_AT_FAILURE = True
 AXES_COOLOFF_TIME = 5
-# lockout user based of browser, ip and username
-AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = False
+AXES_LOCKOUT_PARAMETERS = ["ip_address", "username", "user_agent"]
+AXES_LOCK_OUT_BY = "combo"
 
 # CELERY settings
 CELERY_BROKER_URL = env("CELERY_BROKER")
