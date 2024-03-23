@@ -12,6 +12,14 @@ from rest_framework.views import APIView
 
 from core_apps.blogs.models import Blog, BlogViews
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
+# Redis cache imports
+from django.core.cache import cache
+from django.conf import settings
+import redis
+
 from .exceptions import UpdateBlog
 from .filters import BlogFilter
 from .pagination import BlogPagination
@@ -42,6 +50,15 @@ class BlogListAPIView(generics.ListAPIView):
     filterset_class = BlogFilter
     ordering_fields = ["created_at", "username"]
 
+    # Redis cache configuration
+    redis_instance = redis.StrictRedis(
+        host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0
+    )
+
+    @method_decorator(cache_page(60 * 60 * 2))  # Cache for 2 hours
+    def dispatch(self, *args, **kwargs):
+        return super(BlogListAPIView, self).dispatch(*args, **kwargs)
+
 
 class BlogCreateAPIView(generics.CreateAPIView):
     """Create a blog"""
@@ -64,6 +81,10 @@ class BlogCreateAPIView(generics.CreateAPIView):
             f"blog {serializer.data.get('title')} \
             created by {user.username}"
         )
+
+        # Clear the cache
+        cache.delete("BlogListAPIView")
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

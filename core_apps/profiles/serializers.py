@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 from typing import Any, List
 
@@ -37,8 +38,19 @@ class ProfileSerializer(serializers.ModelSerializer):
         last_name: str = obj.user.last_name.title()
         return f"{first_name} {last_name}"
 
+    # def get_profile_photo(self, obj: Profile) -> str:
+    #     return obj.profile_photo.url
+
     def get_profile_photo(self, obj: Profile) -> str:
-        return obj.profile_photo.url
+        if obj.profile_photo and obj.profile_photo.name.startswith(settings.MEDIA_URL):
+            request = self.context.get("request")
+            if request is not None:
+                return request.build_absolute_uri(obj.profile_photo.url)
+            else:
+                return obj.profile_photo.url
+        else:
+            # If the profile_photo is a URL, return it as-is
+            return obj.profile_photo.name
 
     def get_following(self, instance: Profile) -> bool:
         request: Any = self.context.get("request", None)
