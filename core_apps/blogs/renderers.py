@@ -5,7 +5,7 @@ from rest_framework.renderers import JSONRenderer
 
 
 class BlogJSONRenderer(JSONRenderer):
-    """JSON Renderer for blog app"""
+    """JSON Renderer for individual blog"""
 
     charset = "utf-8"
 
@@ -15,7 +15,19 @@ class BlogJSONRenderer(JSONRenderer):
         accepted_media_type: Optional[str] = None,
         renderer_context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Render the blog data"""
+        """
+        Render the data for an individual blog.
+
+        Args:
+        - data (Any): Data to be rendered.
+        - accepted_media_type (Optional[str]): Media type being
+            accepted.
+        - renderer_context (Optional[Dict[str, Any]]): Context
+            of the renderer.
+
+        Returns:
+        - Any: Rendered JSON data.
+        """
         status_code = renderer_context["response"].status_code
         errors = data.get("errors", None)
 
@@ -25,6 +37,8 @@ class BlogJSONRenderer(JSONRenderer):
 
 
 class BlogsJSONRenderer(JSONRenderer):
+    """JSON Renderer for multiple blogs"""
+
     charset = "utf-8"
 
     def render(
@@ -33,6 +47,17 @@ class BlogsJSONRenderer(JSONRenderer):
         accepted_media_type: Optional[str] = None,
         renderer_context: Optional[Dict[str, Any]] = None,
     ) -> Any:
+        """
+        Render the data for multiple blogs.
+
+        Args:
+        - data (Any): Data to be rendered.
+        - accepted_media_type (Optional[str]): Media type being accepted.
+        - renderer_context (Optional[Dict[str, Any]]): Context of the renderer.
+
+        Returns:
+        - Any: Rendered JSON data.
+        """
         status_code = renderer_context["response"].status_code
         errors = data.get("errors", None)
 
