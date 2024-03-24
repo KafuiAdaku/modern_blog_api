@@ -4,17 +4,30 @@ from .models import Tag
 
 
 class TagRelatedField(serializers.RelatedField):
-    """Custom Tag Related Field"""
+    """
+    Custom related field for Tag model.
+
+    This field is used to represent and validate relationships
+        with Tag model.
+
+    Methods:
+    - get_queryset(): Get the queryset for Tag objects.
+    - to_internal_value(data): Convert external data to
+        internal Tag object.
+    - to_representation(value): Convert Tag object
+        to string representation.
+    """
+
     def get_queryset(self) -> QuerySet[Tag]:
-        """Get Queryset"""
+        """Get the queryset for Tag objects."""
         return Tag.objects.all()
 
     def to_internal_value(self, data) -> Tag:
-        """To Internal Value"""
+        """Convert external data to internal Tag object."""
         tag, created = Tag.objects.get_or_create(tag=data, slug=data.lower())
 
         return tag
 
     def to_representation(self, value) -> str:
-        """To Representation"""
+        """Convert Tag object to string representation."""
         return value.tag

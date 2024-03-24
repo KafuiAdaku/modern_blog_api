@@ -9,7 +9,17 @@ User = get_user_model()
 
 
 class ReactionManager(models.Manager):
-    """Custom manager for Reaction model."""
+    """
+    Custom manager for the Reaction model.
+
+    This manager provides additional methods for working
+        with Reaction instances.
+
+    Methods:
+    - likes: Return the number of likes.
+    - dislikes: Return the number of dislikes.
+    - has_reacted: Check if a user has reacted.
+    """
 
     def likes(self) -> int:
         """Return the number of likes."""
@@ -27,7 +37,19 @@ class ReactionManager(models.Manager):
 
 
 class Reaction(TimeStampedUUIDModel):
-    """Model for user reactions on articles."""
+    """
+    Model for user reactions on articles.
+
+    This model represents the reactions (likes/dislikes) of
+        users on blog articles.
+
+    Attributes:
+    - user (ForeignKey): The user who reacted.
+    - blog (ForeignKey): The blog on which the reaction was made.
+    - reaction (IntegerField): The reaction value (like: 1, dislike: -1).
+    - objects (ReactionManager): Custom manager for the Reaction model.
+    - Meta (class): Inner class defining metadata options for the model.
+    """
 
     class Reactions(models.IntegerChoices):
         """Choices for user reactions."""
@@ -46,11 +68,22 @@ class Reaction(TimeStampedUUIDModel):
     objects = ReactionManager()
 
     class Meta:
-        """Meta options."""
+        """
+        Meta options for the Reaction model.
+
+        Attributes:
+        - unique_together (list): Specifies the unique-together
+            constraint for the model.
+        """
 
         unique_together = ["user", "blog", "reaction"]
 
     def __str__(self):
-        """Return string representation."""
+        """
+        Return a string representation of the Reaction instance.
+
+        Returns:
+        - str: A string representing the user, blog, and reaction.
+        """
         return f"{self.user.username} voted on \
             {self.blog.title} with a {self.reaction}"

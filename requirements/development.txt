@@ -11,3 +11,5 @@ PyYAML==6.0
 watchdog==2.1.6
 
 django-redis==5.4.0
+
+pytest-django==4.4.0

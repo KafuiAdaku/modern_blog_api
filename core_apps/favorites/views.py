@@ -1,4 +1,4 @@
-from django.http import HttpRequest
+from rest_framework.request import Request
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,13 +12,33 @@ from .serializers import FavoriteSerializer
 
 
 class FavoriteAPIView(generics.CreateAPIView):
-    """View for favoriting a blog."""
+    """
+    API view for favoriting a blog.
+
+    This view allows authenticated users to favorite a blog.
+
+    Permissions:
+    - IsAuthenticated: Only authenticated users are
+        allowed to access this view.
+
+    Methods:
+    - post: Create a favorite.
+    """
 
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = FavoriteSerializer
 
-    def post(self, request: HttpRequest, slug: str) -> Response:
-        """Create a favorite."""
+    def post(self, request: Request, slug: str) -> Response:
+        """
+        Create a favorite.
+
+        Args:
+        - request (Request): The HTTP request object.
+        - slug (str): The slug of the blog.
+
+        Returns:
+        - Response: HTTP response object.
+        """
         data = request.data
         blog = Blog.objects.get(slug=slug)
         user = request.user
@@ -39,12 +59,30 @@ class FavoriteAPIView(generics.CreateAPIView):
 
 
 class ListUserFavoriteBlogsAPIView(APIView):
-    """View for listing user favorite blogs."""
+    """
+    API view for listing user favorite blogs.
+
+    This view allows authenticated users to list their favorite blogs.
+
+    Permissions:
+    - IsAuthenticated: Only authenticated users are allowed to access this view.
+
+    Methods:
+    - get: List user favorite blogs.
+    """
 
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request: HttpRequest) -> Response:
-        """List user favorite blogs."""
+    def get(self, request: Request) -> Response:
+        """
+        List user favorite blogs.
+
+        Args:
+        - request (Request): The HTTP request object.
+
+        Returns:
+        - Response: HTTP response object.
+        """
         Favorites = Favorite.objects.filter(user_id=request.user.pkid)
 
         favorite_blogs = []

@@ -9,6 +9,30 @@ from .managers import CustomUserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    Custom user model representing a user account.
+
+    This model replaces the default Django User model with a custom one.
+
+    Attributes:
+    - pkid: Primary key for the user model.
+    - id: Unique identifier for the user.
+    - username: User's username.
+    - first_name: User's first name.
+    - last_name: User's last name.
+    - email: User's email address.
+    - is_staff: Indicates if the user is a staff member.
+    - is_active: Indicates if the user account is active.
+    - date_joined: Date and time when the user joined.
+    - USERNAME_FIELD: Field used for authentication (email).
+    - REQUIRED_FIELDS: List of fields required for creating a user (username).
+    - objects: Custom manager for the user model.
+
+    Methods:
+    - __str__: Returns the username as a string.
+    - get_full_name: Returns the full name of the user.
+    """
+
     pkid = models.BigAutoField(primary_key=True, editable=False)
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     username = models.CharField(
@@ -25,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD: str = "email"
-    REQUIRED_FIELDS: list[str] = ["username"]
+    REQUIRED_FIELDS: list[str] = ["username", "first_name", "last_name"]
 
     objects = CustomUserManager()
 
