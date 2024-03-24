@@ -1,8 +1,15 @@
 import logging
-from typing import List, Dict
-from django.http import HttpRequest
+from typing import Dict, List
 
+import redis
+from django.conf import settings
 from django.contrib.auth import get_user_model
+
+# Redis cache imports
+from django.core.cache import cache
+from django.http import HttpRequest
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
@@ -12,24 +19,12 @@ from rest_framework.views import APIView
 
 from core_apps.blogs.models import Blog, BlogViews
 
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-
-# Redis cache imports
-from django.core.cache import cache
-from django.conf import settings
-import redis
-
 from .exceptions import UpdateBlog
 from .filters import BlogFilter
 from .pagination import BlogPagination
 from .permissions import IsOwnerOrReadOnly
 from .renderers import BlogJSONRenderer, BlogsJSONRenderer
-from .serializers import (
-    BlogCreateSerializer,
-    BlogSerializer,
-    BlogUpdateSerializer,
-)
+from .serializers import BlogCreateSerializer, BlogSerializer, BlogUpdateSerializer
 
 User = get_user_model()
 
@@ -37,7 +32,19 @@ logger = logging.getLogger(__name__)
 
 
 class BlogListAPIView(generics.ListAPIView):
-    """List all blogs"""
+    """
+    List all blogs.
+
+    Attributes:
+    - serializer_class: The serializer class for blogs.
+    - permission_classes: The permission classes for accessing this view.
+    - queryset: The queryset containing all blogs.
+    - renderer_classes: The renderer classes for rendering the response.
+    - pagination_class: The pagination class for paginating the results.
+    - filter_backends: The filter backends used for filtering the queryset.
+    - filterset_class: The filter set class used for filtering.
+    - ordering_fields: The fields available for ordering the queryset.
+    """
 
     serializer_class = BlogSerializer
     permission_classes = [
@@ -61,7 +68,16 @@ class BlogListAPIView(generics.ListAPIView):
 
 
 class BlogCreateAPIView(generics.CreateAPIView):
-    """Create a blog"""
+    """
+    Create a blog.
+
+    Attributes:
+    - permission_classes: The permission classes for
+        accessing this view.
+    - serializer_class: The serializer class for creating a blog.
+    - renderer_classes: The renderer classes for rendering
+        the response.
+    """
 
     permission_classes = [
         permissions.IsAuthenticated,
@@ -70,7 +86,17 @@ class BlogCreateAPIView(generics.CreateAPIView):
     renderer_classes = [BlogJSONRenderer]
 
     def create(self, request: HttpRequest, *args: List, **kwargs: Dict) -> Response:
-        """Create a blog"""
+        """
+        Create a blog.
+
+        Args:
+        - request (HttpRequest): The HTTP request.
+        - args (List): Additional positional arguments.
+        - kwargs (Dict): Additional keyword arguments.
+
+        Returns:
+        - Response: The HTTP response.
+        """
         user = request.user
         data = request.data
         data["author"] = user.pkid
@@ -89,13 +115,28 @@ class BlogCreateAPIView(generics.CreateAPIView):
 
 
 class BlogDetailView(APIView):
-    """Get a blog"""
+    """
+    Get a blog.
+
+    Attributes:
+    - renderer_classes: The renderer classes for rendering the response.
+    - permission_classes: The permission classes for accessing this view.
+    """
 
     renderer_classes = [BlogJSONRenderer]
     permission_classes = [permissions.AllowAny]
 
     def get(self, request: HttpRequest, slug: str) -> Response:
-        """Get a blog by slug"""
+        """
+        Get a blog by slug.
+
+        Args:
+        - request (HttpRequest): The HTTP request.
+        - slug (str): The slug of the blog.
+
+        Returns:
+        - Response: The HTTP response.
+        """
         blog = Blog.objects.get(slug=slug)
 
         # Getting IP address of user to increase blogs view count
@@ -119,7 +160,16 @@ class BlogDetailView(APIView):
 @api_view(["PATCH"])
 @permission_classes([permissions.IsAuthenticated])
 def update_blog_api_view(request: HttpRequest, slug: str) -> Response:
-    """Update a blog"""
+    """
+    Update a blog.
+
+    Args:
+    - request (HttpRequest): The HTTP request.
+    - slug (str): The slug of the blog to update.
+
+    Returns:
+    - Response: The HTTP response.
+    """
     try:
         blog = Blog.objects.get(slug=slug)
     except Blog.DoesNotExist:
@@ -138,14 +188,31 @@ def update_blog_api_view(request: HttpRequest, slug: str) -> Response:
 
 
 class BlogDeleteAPIView(generics.DestroyAPIView):
-    """Delete a blog"""
+    """
+    Delete a blog.
+
+    Attributes:
+    - permission_classes: The permission classes for accessing this view.
+    - queryset: The queryset containing all blogs.
+    - lookup_field: The field to use for looking up the blog.
+    """
 
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Blog.objects.all()
     lookup_field = "slug"
 
     def delete(self, request: HttpRequest, *args: List, **kwargs: Dict) -> Response:
-        """Delete a blog"""
+        """
+        Delete a blog.
+
+        Args:
+        - request (HttpRequest): The HTTP request.
+        - args (List): Additional positional arguments.
+        - kwargs (Dict): Additional keyword arguments.
+
+        Returns:
+        - Response: The HTTP response.
+        """
         try:
             blog = Blog.objects.get(slug=self.kwargs.get("slug"))  # noqa: F841
         except Blog.DoesNotExist:

@@ -11,6 +11,22 @@ from .models import Rating
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated])
 def create_blog_rating_view(request, blog_id):
+    """
+    API view for creating a rating for a blog.
+
+    This view allows authenticated users to rate a blog post.
+
+    Permissions:
+    - IsAuthenticated: Only authenticated users are allowed
+        to access this view.
+
+    Args:
+    - request: The HTTP request object.
+    - blog_id (int): The ID of the blog post.
+
+    Returns:
+    - Response: HTTP response object.
+    """
     author = request.user
     blog = Blog.objects.get(id=blog_id)
     data = request.data

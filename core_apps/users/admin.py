@@ -1,13 +1,38 @@
+from typing import Any, List, Tuple
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
-from typing import List, Tuple, Any
 
 from .forms import UserChangeForm, UserCreationForm
 from .models import User
 
 
 class UserAdmin(BaseUserAdmin):
+    """
+    Custom User admin interface.
+
+    This class defines the administration interface for the User model.
+
+    Attributes:
+    - ordering (List[str]): Field used for ordering the users list
+        in the admin interface.
+    - add_form: Form used for adding new users.
+    - form: Form used for editing existing users.
+    - model: User model managed by this admin interface.
+    - list_display (List[str]): Fields displayed in the users list.
+    - list_display_links (List[str]): Fields used for linking to
+        the change page from the users list.
+    - list_filter (List[str]): Fields used for filtering users
+        in the admin interface.
+    - fieldsets (Tuple[Tuple[str, Any], ...]): Fieldsets displayed
+        in the user change form.
+    - add_fieldsets (Tuple[Tuple[str, Any], ...]): Fieldsets displayed in
+        the user add form.
+    - search_fields (List[str]): Fields used for searching users in the
+        admin interface.
+    """
+
     ordering: List[str] = ["email"]
     add_form = UserCreationForm
     form = UserChangeForm
@@ -62,4 +87,5 @@ class UserAdmin(BaseUserAdmin):
     search_fields: List[str] = ["email", "username", "first_name", "last_name"]
 
 
+# Register the User model with the custom admin interface
 admin.site.register(User, UserAdmin)

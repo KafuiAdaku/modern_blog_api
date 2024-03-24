@@ -1,11 +1,14 @@
+from typing import Dict, Union
+
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.http import HttpRequest
 from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.exceptions import ValidationError
 
 from modern_blog_api.settings.development import DEFAULT_FROM_EMAIL
 
@@ -15,14 +18,16 @@ from .pagination import ProfilePagination
 from .renderers import ProfileJSONRenderer, ProfilesJSONRenderer
 from .serializers import FollowingSerializer, ProfileSerializer, UpdateProfileSerializer
 
-from django.http import HttpRequest
-from rest_framework.request import Request
-from typing import Union, Dict
-
+# Get user model
 User = get_user_model()
 
 
+# View for listing profiles
 class ProfileListAPIView(generics.ListAPIView):
+    """
+    API view to list profiles.
+    """
+
     serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = Profile.objects.all()
@@ -31,6 +36,10 @@ class ProfileListAPIView(generics.ListAPIView):
 
 
 class ProfileDetailAPIView(generics.RetrieveAPIView):
+    """
+    API view to retrieve profile details.
+    """
+
     permission_classes = [permissions.IsAuthenticated]
     queryset = Profile.objects.select_related("user")
     serializer_class = ProfileSerializer
@@ -54,6 +63,10 @@ class ProfileDetailAPIView(generics.RetrieveAPIView):
 
 
 class UpdateProfileAPIView(APIView):
+    """
+    API view to update a profile.
+    """
+
     permission_classes = [permissions.IsAuthenticated]
     queryset = Profile.objects.select_related("user")
     renderer_classes = [ProfileJSONRenderer]
@@ -110,6 +123,10 @@ def get_my_followers(request: Request, username: str) -> Response:
 
 
 class FollowUnfollowAPIView(generics.GenericAPIView):
+    """
+    API view to follow/unfollow a user.
+    """
+
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = FollowingSerializer
 
