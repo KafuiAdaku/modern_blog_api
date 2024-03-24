@@ -8,7 +8,17 @@ User = get_user_model()
 
 
 class Favorite(TimeStampedUUIDModel):
-    """Favorite model"""
+    """
+    Model representing favorites.
+
+    This model represents the relationship between
+        users and their
+    favorite blogs.
+
+    Attributes:
+    - user (ForeignKey): The user who favorited the blog.
+    - blog (ForeignKey): The blog that is favorited.
+    """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
     blog = models.ForeignKey(
@@ -16,11 +26,26 @@ class Favorite(TimeStampedUUIDModel):
     )
 
     def __str__(self) -> str:
-        """Return string representation of the model"""
+        """
+        Return a string representation of the favorite.
+
+        Returns:
+        - str: A string representing the user and the favorited blog.
+        """
         return f"{self.user.username} favorited {self.blog.title}"
 
     def is_favorited(self, user, blog: str) -> bool:
-        """Check if blog is favorited by user"""
+        """
+        Check if a blog is favorited by a user.
+
+        Args:
+        - user: The user.
+        - blog (str): The title of the blog.
+
+        Returns:
+        - bool: True if the blog is favorited by the user,
+            False otherwise.
+        """
         try:
             blog = self.blog
             user = self.user

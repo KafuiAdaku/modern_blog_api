@@ -1,7 +1,8 @@
-from django.http import HttpRequest
 from typing import Dict
+
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import NotFound
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from core_apps.blogs.models import Blog
@@ -11,11 +12,36 @@ from .serializers import CommentListSerializer, CommentSerializer
 
 
 class CommentAPIView(generics.GenericAPIView):
+    """
+    API view for handling comment creation and retrieval.
+
+    This view allows authenticated users to create new comments
+    on blogs and retrieve all comments associated with
+        a specific blog.
+
+    Permissions:
+    - IsAuthenticated: Only authenticated users are allowed
+        to access this view.
+
+    Methods:
+    - post: Create a new comment.
+    - get: Retrieve all comments for a blog.
+    """
+
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CommentSerializer
 
-    def post(self, request: HttpRequest, **kwargs: Dict) -> Response:
-        """Create a new comment."""
+    def post(self, request: Request, **kwargs: Dict) -> Response:
+        """
+        Create a new comment.
+
+        Args:
+        - request (Request): The HTTP request object.
+        - **kwargs (Dict): Keyword arguments.
+
+        Returns:
+        - Response: HTTP response object.
+        """
         try:
             slug = self.kwargs.get("slug")
             blog = Blog.objects.get(slug=slug)
@@ -31,8 +57,17 @@ class CommentAPIView(generics.GenericAPIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def get(self, request: HttpRequest, **kwargs: Dict) -> Response:
-        """Get all comments for a blog."""
+    def get(self, request: Request, **kwargs: Dict) -> Response:
+        """
+        Retrieve all comments for a blog.
+
+        Args:
+        - request (HttpRequest): The HTTP request object.
+        - **kwargs (Dict): Keyword arguments.
+
+        Returns:
+        - Response: HTTP response object.
+        """
         try:
             slug = self.kwargs.get("slug")
             blog = Blog.objects.get(slug=slug)
@@ -54,13 +89,36 @@ class CommentAPIView(generics.GenericAPIView):
 
 
 class CommentUpdateDeleteAPIView(generics.GenericAPIView):
-    """Update and delete a comment class"""
+    """
+    API view for updating and deleting comments.
+
+    This view allows authenticated users to update and
+        delete their own comments.
+
+    Permissions:
+    - IsAuthenticated: Only authenticated users are
+        allowed to access this view.
+
+    Methods:
+    - put: Update a comment.
+    - delete: Delete a comment.
+    """
 
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CommentSerializer
 
-    def put(self, request: HttpRequest, slug: str, id: int) -> Response:
-        """Update a comment."""
+    def put(self, request: Request, slug: str, id: int) -> Response:
+        """
+        Update a comment.
+
+        Args:
+        - request (HttpRequest): The HTTP request object.
+        - slug (str): The slug of the blog.
+        - id (int): The ID of the comment to update.
+
+        Returns:
+        - Response: HTTP response object.
+        """
         try:
             comment_to_update = Comment.objects.get(id=id)
         except Comment.DoesNotExist:
@@ -76,8 +134,18 @@ class CommentUpdateDeleteAPIView(generics.GenericAPIView):
         }
         return Response(response, status=status.HTTP_200_OK)
 
-    def delete(self, request: HttpRequest, slug: str, id: int) -> Response:
-        """Delete a comment."""
+    def delete(self, request: Request, slug: str, id: int) -> Response:
+        """
+        Delete a comment.
+
+        Args:
+        - request (HttpRequest): The HTTP request object.
+        - slug (str): The slug of the blog.
+        - id (int): The ID of the comment to delete.
+
+        Returns:
+        - Response: HTTP response object.
+        """
         try:
             comment_to_delete = Comment.objects.get(id=id)
         except Comment.DoesNotExist:

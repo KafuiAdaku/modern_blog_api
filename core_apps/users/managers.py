@@ -5,13 +5,49 @@ from django.utils.translation import gettext_lazy as _
 
 
 class CustomUserManager(BaseUserManager):
+    """
+    Custom manager for the User model.
+
+    This manager provides methods for creating and
+        managing user accounts.
+
+    Methods:
+    - email_validator: Validate the email address format.
+    - create_user: Create a new user account.
+    - create_superuser: Create a new superuser account.
+    """
+
     def email_validator(self, email: str) -> None:
+        """
+        Validate the format of the email address.
+
+        Raises:
+        - ValueError: If the email address is invalid.
+        """
+
         try:
             validate_email(email)
         except ValidationError:
             raise ValueError(_("You must provide a valid email address"))
 
     def create_user(self, username: str, email: str, password: str, **extra_fields):
+        """
+        Create a new user account.
+
+        Args:
+        - username (str): User's username.
+        - email (str): User's email address.
+        - password (str): User's password.
+        - extra_fields (dict): Extra fields for the user.
+
+        Returns:
+        - User: The created user object.
+
+        Raises:
+        - ValueError: If required fields are not provided or if
+            the email address is invalid.
+        """
+
         if not username:
             raise ValueError(_("Users must submit a username"))
 
@@ -31,6 +67,23 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(
         self, username: str, email: str, password: str, **extra_fields
     ):
+        """
+        Create a new superuser account.
+
+        Args:
+        - username (str): User's username.
+        - email (str): User's email address.
+        - password (str): User's password.
+        - extra_fields (dict): Extra fields for the user.
+
+        Returns:
+        - User: The created superuser object.
+
+        Raises:
+        - ValueError: If required fields are not provided, if the email
+            address is invalid,or if the provided superuser flags are
+            not set to True.
+        """
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
