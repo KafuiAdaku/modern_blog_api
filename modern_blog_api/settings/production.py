@@ -4,7 +4,7 @@ from .base import env
 
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 
-ALLOWED_HOST = env.list("DJANGO_ALLOWED_HOSTS", default=["example.com"])
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["example.com"])
 ADMIN_URL = env("DJANGO_ADMIN_URL")
 
 
@@ -38,9 +38,9 @@ SITE_NAME = "Modern Blog Api"
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="[Modern Blog Api]")
 EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
-EMAIL_HOST = "smtp.mailgun.org"
-EMAIL_HOST_USER = "postmaster@mg.modernblogapi.me"
-EMAIL_HOST_PASSWORD = env("SMTP_MAILGUN_PASSWORD")
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = "modernblogapi@gmail.com"
+EMAIL_HOST_PASSWORD = env("GOOGLE_MAIL_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DOMAIN = env("DOMAIN")
