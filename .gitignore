@@ -6,8 +6,8 @@ staticfiles
 .venv/*
 !.venv/.local/
 .DS_Store
-.envs/*
-!.envs/.development
+# .envs/*
+# !.envs/.development
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

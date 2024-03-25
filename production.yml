@@ -13,21 +13,35 @@ services:
       - ./.envs/.production/.postgres
     depends_on:
       - redis
+    networks:
+      - reverseproxy-nw
 
   redis:
     image: redis:6-alpine
+    networks:
+      - reverseproxy-nw
 
   rabbitmq:
     image: rabbitmq:3-management
     env_file:
       - ./.envs/.production/.django
+    networks:
+      - reverseproxy-nw
 
   celery_worker:
     <<: *api
     image: modern-blog-celery-worker
     command: /start-celeryworker
+    networks:
+      - reverseproxy-nw
 
   flower:
     <<: *api
     image: modern-blog-flower
     command: /start-flower
+    networks:
+      - reverseproxy-nw
+
+networks:
+  reverseproxy-nw:
+    external: true
