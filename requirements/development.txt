@@ -12,4 +12,7 @@ watchdog==2.1.6
 
 django-redis==5.4.0
 
-pytest-django==4.4.0
+pytest-django==4.7.0
+pytest-factoryboy==2.6.1
+faker==24.2.1
+pytest-cov==4.1.0
