@@ -6,7 +6,7 @@ from core_apps.users.tests.factories import UserFactory
 register(UserFactory)
 
 @pytest.fixture
-def user(db, user_factory):
+def base_user(db, user_factory):
     """Fixture for User model"""
     new_user = user_factory.create()
     return new_user
