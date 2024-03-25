@@ -10,7 +10,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from modern_blog_api.settings.development import DEFAULT_FROM_EMAIL
+from modern_blog_api.settings.production import DEFAULT_FROM_EMAIL
 
 from .exceptions import CantFollowYourself, NotYourProfile
 from .models import Profile

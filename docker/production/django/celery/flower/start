@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Exit immediately if a command exits with a non-zero status
+set -o errexit
+# Treat unset variables as an error when substituting
+set -o nounset
+
+# Function to check if Celery workers are ready
+worker_ready(){
+   celery -A modern_blog_api inspect ping
+}
+
+# Loop until Celery workers are ready
+until worker_ready; do
+   >&2 echo "Celery workers are not available :-("
+   sleep 1
+done
+
+# Celery workers are available and ready
+>&2 echo "Celery workers are available and ready!....:-)"
+
+# Start Flower monitoring tool for Celery
+celery -A modern_blog_api \
+   --broker="${CELERY_BROKER}" \
+   flower \
+   --basic_auth="${CELERY_FLOWER_USER}:${CELERY_FLOWER_PASSWORD}"
