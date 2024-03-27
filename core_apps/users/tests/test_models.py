@@ -47,17 +47,17 @@ def test_create_user_with_no_username(user_factory):
         user_factory.create(username=None)
     assert str(err.value) == "Users must submit a username"
 
-# def test_create_user_with_no_firstname(user_factory):
-#     """Test create user with no first name"""
-#     with pytest.raises(ValueError) as err:
-#         user_factory.create(first_name=None)
-#     assert str(err.value) == "Users must submit a first name"
+def test_create_user_with_no_firstname(user_factory):
+    """Test create user with no first name"""
+    with pytest.raises(ValueError) as err:
+        user_factory.create(first_name=None)
+    assert str(err.value) == "Users must submit a first name"
 
-# def test_create_user_with_no_lastname(user_factory):
-#     """Test create user with no last name"""
-#     with pytest.raises(ValueError) as err:
-#         user_factory.create(last_name=None)
-#     assert str(err.value) == "Users must submit a last name"
+def test_create_user_with_no_lastname(user_factory):
+    """Test create user with no last name"""
+    with pytest.raises(ValueError) as err:
+        user_factory.create(last_name=None)
+    assert str(err.value) == "Users must submit a last name"
 
 def test_create_superuser_with_no_email(user_factory):
     """Test create super user with no email"""
